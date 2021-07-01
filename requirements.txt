@@ -1,2 +1,3 @@
 Flask==2.0.1
-whoosh
+ipython==2.4.1
+Whoosh==2.6.0
