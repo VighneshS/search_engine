@@ -8,6 +8,7 @@ let indexingTime
 let queryResultsCount
 let spinner
 let accordion
+let stored_data
 
 const DOCUMENT_NAME_PLACEHOLDER = '{{documentName}}'
 const DOCUMENT_CARD_ID_PLACEHOLDER = '{{documentCardId}}'
@@ -117,6 +118,31 @@ function indexData() {
         indexingTime.html("Time taken for indexing: " + data['timeTaken'])
         spinner.hide()
         indexingResults.show()
+        getStoredData()
+    });
+}
+
+function getStoredData() {
+    spinner.show()
+    searchResults.hide()
+    indexingResults.hide()
+    let payLoad = {
+        'type': 'stored_data'
+    }
+    $.ajax({
+        type: 'POST',
+        url: "/",
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify(payLoad)
+    }).done(function (data) {
+        console.log(data);
+        stored_data.empty()
+        for (const dataKey in data) {
+            stored_data.append($('<div>' + data[dataKey]['documentName'] + ': ' + data[dataKey]['wordCount'] + '<div>'))
+        }
+        spinner.hide()
+        indexingResults.show()
     });
 }
 
@@ -131,6 +157,7 @@ $(function () {
     queryResultsCount = $('#query_results_count')
     spinner = $('#spinner')
     accordion = $('#accordion')
+    stored_data = $('#stored_data')
     spinner.hide()
     searchResults.hide()
     indexingResults.hide()
@@ -139,4 +166,5 @@ $(function () {
             searchQuery()
         }
     });
+    getStoredData()
 })
