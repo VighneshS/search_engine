@@ -20,7 +20,7 @@ jobs:
     - name: Set up Python version
       uses: actions/setup-python@v1
       with:
-        python-version: '3.9'
+        python-version: '3.8'
 
     - name: Create and start virtual environment
       run: |
@@ -59,4 +59,4 @@ jobs:
         with:
           app-name: 'vighnesh-search-engine'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_c9e6cceb14ba4b7d91e57f385df1544c }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_8816a68dbf1c417a93c39fa5cd7cf417 }}
