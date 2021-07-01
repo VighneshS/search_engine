@@ -12,15 +12,16 @@ corpus_dir = "corpus"
 # Top 'n' documents as result
 top_n = 10
 
+schema = Schema(title=TEXT(stored=True),
+                path=ID(stored=True),
+                content=TEXT(stored=True),
+                line_number=NUMERIC(int, 32, stored=True, signed=False),
+                line_text=ID(stored=True))
+
 
 def index_corpus():
     t_start = process_time()
     global writer
-    schema = Schema(title=TEXT(stored=True),
-                    path=ID(stored=True),
-                    content=TEXT(stored=True),
-                    line_number=NUMERIC(int, 32, stored=True, signed=False),
-                    line_text=ID(stored=True))
     if not os.path.exists("indexdir"):
         os.mkdir("indexdir")
     # Creating a index writer to add document as per schema
@@ -41,7 +42,11 @@ def index_corpus():
     finally:
         writer.commit()
         t_stop = process_time()
-        print("Time taken for indexing: {0} (HH:MM:SS)".format(datetime.timedelta(seconds=t_stop - t_start)))
+        time_taken = "{0} (HH:MM:SS)".format(datetime.timedelta(seconds=t_stop - t_start))
+        print("Time taken for indexing: " + time_taken)
+        return jsonify({
+            'timeTaken': time_taken
+        })
 
 
 def search_query_string(query_string: str):
@@ -66,15 +71,16 @@ def search_query_string(query_string: str):
     })
 
 
-index_corpus()
-
 app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def search_document():
     if request.method == 'POST':
-        return search_query_string(request.get_json()['queryString'])
+        if request.get_json()['type'] == 'search':
+            return search_query_string(request.get_json()['queryString'])
+        elif request.get_json()['type'] == 'indexing':
+            return index_corpus()
     else:
         return render_template('index.html')
 

@@ -43,15 +43,20 @@
     <label for="query_string"><strong>Search Query: </strong></label>
     <input id="query_string" name="query_string" type="text">
     <input id="search_btn" class="btn btn-primary" type="button" value="Search" onclick="searchQuery();">
+    <input id="indexing_btn" class="btn btn-primary" type="button" value="Index Data" onclick="indexData();">
 </div>
 <div id="spinner" class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
     <span class="sr-only">Loading...</span>
+</div>
+<div id="indexing_results">
+<span><strong>Time Taken for indexing: </strong><span><strong style="color: dodgerblue"
+                                                              id="indexing_time"></strong></span></span>
 </div>
 <div id="search_results">
     <span><strong>Query Retrieved in </strong><span><strong style="color: dodgerblue"
                                                             id="query_time"></strong></span></span>
     <span><strong>Number of Results Retrieved: </strong><span><strong style="color: dodgerblue"
-                                                            id="query_results_count"></strong></span></span>
+                                                                      id="query_results_count"></strong></span></span>
     <div class="container">
         <div id="accordion">
         </div>

@@ -1,6 +1,8 @@
 let queryInput
 let searchResults
+let indexingResults
 let queryTime
+let indexingTime
 let queryResultsCount
 let spinner
 let accordion
@@ -74,7 +76,9 @@ function loadSearchResults(data) {
 function searchQuery() {
     spinner.show()
     searchResults.hide()
+    indexingResults.hide()
     let payLoad = {
+        'type': 'search',
         'queryString': queryInput.val()
     }
     $.ajax({
@@ -87,18 +91,43 @@ function searchQuery() {
         loadSearchResults(data)
         spinner.hide()
         searchResults.show()
+        indexingResults.show()
+    });
+}
+
+function indexData() {
+    spinner.show()
+    searchResults.hide()
+    indexingResults.hide()
+    let payLoad = {
+        'type': 'indexing'
+    }
+    $.ajax({
+        type: 'POST',
+        url: "/",
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify(payLoad)
+    }).done(function (data) {
+        console.log(data);
+        indexingTime.html("Time taken for indexing: " + data['timeTaken'])
+        spinner.hide()
+        indexingResults.show()
     });
 }
 
 $(function () {
     queryInput = $('#query_string')
     searchResults = $('#search_results')
+    indexingResults = $('#indexing_results')
     queryTime = $('#query_time')
+    indexingTime = $('#indexing_time')
     queryResultsCount = $('#query_results_count')
     spinner = $('#spinner')
     accordion = $('#accordion')
     spinner.hide()
     searchResults.hide()
+    indexingResults.hide()
     $(document).on('keypress', function (e) {
         if (e.which === 13) {
             searchQuery()
