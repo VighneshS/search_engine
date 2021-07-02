@@ -9,7 +9,6 @@ let queryResultsCount
 let spinner
 let accordion
 let stored_data
-let input_doc
 
 const DOCUMENT_NAME_PLACEHOLDER = '{{documentName}}'
 const DOCUMENT_CARD_ID_PLACEHOLDER = '{{documentCardId}}'
@@ -135,9 +134,6 @@ function getStoredData() {
         data: JSON.stringify(payLoad)
     }).done(function (data) {
         console.log(data);
-        if (data.length >= 8) {
-            input_doc.hide()
-        }
         stored_data.empty()
         for (const dataKey in data) {
             stored_data.append($('<div>' + data[dataKey]['documentName'] + ': ' + data[dataKey]['wordCount'] + '<div>'))
@@ -157,7 +153,6 @@ $(function () {
     spinner = $('#spinner')
     accordion = $('#accordion')
     stored_data = $('#stored_data')
-    input_doc = $('#input_doc')
     spinner.hide()
     searchResults.hide()
     indexingResults.hide()
