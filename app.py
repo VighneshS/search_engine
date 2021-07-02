@@ -12,8 +12,6 @@ corpus_dir = "corpus"
 # Top 'n' documents as result
 top_n = 10
 
-indexdir = "indexdir"
-
 schema = Schema(title=TEXT(stored=True),
                 path=ID(stored=True),
                 content=TEXT(stored=True),
@@ -39,7 +37,7 @@ def index_corpus():
                     writer.add_document(title=path.split("/")[1],
                                         path=path,
                                         content=line,
-                                        line_number=line_number + 1,
+                                        line_number=line_number,
                                         line_text=line)
     finally:
         writer.commit()
@@ -54,7 +52,7 @@ def index_corpus():
 def search_query_string(query_string: str):
     t_start = process_time()
     search_results = []
-    ix = open_dir(indexdir)
+    ix = open_dir("indexdir")
     with ix.searcher(weighting=scoring.Frequency) as searcher:
         query = QueryParser("content", ix.schema).parse(query_string)
         results = searcher.search(query, limit=None)
@@ -76,19 +74,12 @@ def search_query_string(query_string: str):
 app = Flask(__name__)
 
 
-def save_document(document_name: str, text_to_index: str):
-    file = open(corpus_dir + '/' + document_name, 'w')
-    file.write(text_to_index)
-    file.close()
-
-
 @app.route('/', methods=['GET', 'POST'])
 def search_document():
     if request.method == 'POST':
         if request.get_json()['type'] == 'search':
             return search_query_string(request.get_json()['queryString'])
         elif request.get_json()['type'] == 'indexing':
-            save_document(request.get_json()['documentName'], request.get_json()['textToIndex'])
             return index_corpus()
     else:
         return render_template('index.html')

@@ -1,5 +1,3 @@
-let documentName
-let textToIndex
 let queryInput
 let searchResults
 let indexingResults
@@ -102,9 +100,7 @@ function indexData() {
     searchResults.hide()
     indexingResults.hide()
     let payLoad = {
-        'type': 'indexing',
-        'documentName': documentName.val(),
-        'textToIndex': textToIndex.val()
+        'type': 'indexing'
     }
     $.ajax({
         type: 'POST',
@@ -121,8 +117,6 @@ function indexData() {
 }
 
 $(function () {
-    documentName = $('#document_name')
-    textToIndex = $('#text__to_index')
     queryInput = $('#query_string')
     searchResults = $('#search_results')
     indexingResults = $('#indexing_results')
@@ -134,7 +128,7 @@ $(function () {
     spinner.hide()
     searchResults.hide()
     indexingResults.hide()
-    queryInput.on('keypress', function (e) {
+    $(document).on('keypress', function (e) {
         if (e.which === 13) {
             searchQuery()
         }
