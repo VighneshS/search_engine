@@ -82,21 +82,6 @@ def save_document(document_name: str, text_to_index: str):
     file.close()
 
 
-def get_stored_documents():
-    response = []
-    file_paths = [os.path.join(corpus_dir, i) for i in os.listdir(corpus_dir)]
-    for path in file_paths:
-        with open(path, 'r') as fp:
-            text = fp.read()
-            words = text.split()
-            documentName = path.split("/")[1]
-            response.append({
-                'documentName': documentName,
-                'wordCount': len(words)
-            })
-    return jsonify(response)
-
-
 @app.route('/', methods=['GET', 'POST'])
 def search_document():
     if request.method == 'POST':
@@ -105,8 +90,6 @@ def search_document():
         elif request.get_json()['type'] == 'indexing':
             save_document(request.get_json()['documentName'], request.get_json()['textToIndex'])
             return index_corpus()
-        elif request.get_json()['type'] == 'stored_data':
-            return get_stored_documents()
     else:
         return render_template('index.html')
 
