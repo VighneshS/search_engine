@@ -123,6 +123,9 @@ function indexData() {
 }
 
 function getStoredData() {
+    spinner.show()
+    searchResults.hide()
+    indexingResults.hide()
     let payLoad = {
         'type': 'stored_data'
     }
@@ -138,6 +141,8 @@ function getStoredData() {
         for (const dataKey in data) {
             stored_data.append($('<div>' + data[dataKey]['documentName'] + ': ' + data[dataKey]['wordCount'] + '<div>'))
         }
+        spinner.hide()
+        indexingResults.show()
     });
 }
 
